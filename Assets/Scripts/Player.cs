@@ -1,27 +1,31 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Player : MonoBehaviour
 {
-    private Vector3 targetPorision;
+    public int id;
+    public string nickname;
     public float moveSpeed = 3.0f;
-    public bool Moving
-    {
-        get
-        {
-            return this.targetPorision != null;
-        }
-    }
+    public PlayerReachedTargetTileEvent OnReached = new PlayerReachedTargetTileEvent();
+    private bool moving = false;
+    private Vector3 targetPorision;
 
     private void Start()
     {
         this.targetPorision = this.transform.position;
+        this.GetComponent<SpriteRenderer>().color = new Color(
+            Random.Range(0, 256) / 255.0f,
+            Random.Range(0, 256) / 255.0f,
+            Random.Range(0, 256) / 255.0f
+        );
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (this.Moving && this.transform.position != targetPorision)
+        if (!this.moving) return;
+        if (!this.IsReachTarget())
         {
             var nextPosition = Vector2.MoveTowards(
                 this.transform.position,
@@ -33,11 +37,24 @@ public class Player : MonoBehaviour
                 nextPosition.y,
                 this.transform.position.z
             );
+        } else
+        {
+            this.moving = false;
+            OnReached?.Invoke(this);
         }
     }
 
     public void MoveTo(Vector3 position)
     {
         this.targetPorision = position;
+        this.moving = true;
+    }
+
+    private bool IsReachTarget()
+    {
+        return this.transform.position.x == targetPorision.x
+            && this.transform.position.y == targetPorision.y;
     }
 }
+
+public class PlayerReachedTargetTileEvent : UnityEvent<Player> {}

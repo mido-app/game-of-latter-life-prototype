@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Dice
   - Board
+  - UIController
   layers:
   - Default
   - TransparentFX
