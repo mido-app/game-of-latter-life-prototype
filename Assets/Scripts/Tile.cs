@@ -5,6 +5,7 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
     public int number;
+    public EventType eventType;
     private List<Number> numbers = new List<Number>();
 
     // Start is called before the first frame update

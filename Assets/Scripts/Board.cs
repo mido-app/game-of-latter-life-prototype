@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,11 +13,16 @@ public class Board : MonoBehaviour
     {
         for(int y=0; y<100; y++)
         {
-            var tile = createTile();
-            tile.number = Random.Range(0, 1000);
+            var tile = CreateTile();
+            tile.number = UnityEngine.Random.Range(0, 1000);
+            tile.eventType = GetRandomEventType();
             tile.transform.position = new Vector3(0, y, 0);
             this.tiles.Add(tile);
         } 
+    }
+
+    public Tile GetTileByIndex(int index) {
+        return tiles[index];
     }
 
     public Vector2 GetTilePositionByIndex(int index)
@@ -24,9 +30,18 @@ public class Board : MonoBehaviour
         return this.tiles[index].transform.position;
     }
 
-    private Tile createTile() {
+    private Tile CreateTile() {
         var tileObj = GameObject.Instantiate(tilePrehub);
         tileObj.transform.parent = this.transform;
         return tileObj.GetComponent<Tile>();
+    }
+
+    private EventType GetRandomEventType() {
+        List<EventType> eventTypes= Enum
+            .GetValues(typeof(EventType))
+            .Cast<EventType>()
+            .ToList();
+        int index = UnityEngine.Random.Range(0, eventTypes.Count);
+        return eventTypes[index];
     }
 }

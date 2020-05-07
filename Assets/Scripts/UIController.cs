@@ -7,7 +7,7 @@ public class UIController : MonoBehaviour
 {
     private Text turnText;
 
-    void Start()
+    void Awake()
     {
         this.turnText = GameObject.Find("TurnText").GetComponent<Text>();
     }

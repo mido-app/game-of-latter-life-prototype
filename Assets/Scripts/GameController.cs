@@ -65,6 +65,9 @@ public class GameController : MonoBehaviour
 
     public void OnPlayerReachedTargetTile(Player player)
     {
+        Tile targetTile = board.GetTileByIndex(this.currentTileIndexes[this.currentPlayerIndex]);
+        Event evt = Event.GenerateRandomEvent(targetTile.eventType);
+        evt.Exec();
         ActiveteNextPlayer();
     }
 
