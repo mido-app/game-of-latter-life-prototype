@@ -1,22 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System;
 using System.IO;
 using System.Text;
 using UnityEngine;
 
-public class Event
+public class Event : MonoBehaviour
 {
     public static Event GenerateRandomEvent(EventType eventType)
     {
         DirectoryInfo dir = new DirectoryInfo($"{Application.dataPath}/Datas/Events/{eventType.GetDirectoryName()}");
         FileInfo[] files = dir.GetFiles("*.script");
         int index = UnityEngine.Random.Range(0, files.Length);
-        return new Event(eventType, files[index].Name);
+        GameObject gameObject = new GameObject("Event");
+        Event evt = gameObject.AddComponent<Event>();
+        evt.Init(eventType, files[index].Name);
+        return evt;
     }
 
     private List<EventCommand> commands = new List<EventCommand>();
 
-    public Event(
+    public void Init(
         EventType eventType,
         string eventFileName
     )
@@ -24,12 +28,13 @@ public class Event
         ReadEvent(eventType, eventFileName);
     }
 
-    public void Exec()
+    public IEnumerator Exec(Action callback)
     {
         foreach (EventCommand command in commands)
         {
-            command.Exec();
+            yield return StartCoroutine(command.Exec());
         }
+        callback();
     }
 
     private void ReadEvent(EventType eventType, string eventFileName)
@@ -40,7 +45,9 @@ public class Event
             while (!reader.EndOfStream)
             {
                 string line = reader.ReadLine();
-                this.commands.Add(GetCommand(line));
+                if (!string.IsNullOrEmpty(line.Trim())) {
+                    this.commands.Add(GetCommand(line));
+                }
             }
         }
     }

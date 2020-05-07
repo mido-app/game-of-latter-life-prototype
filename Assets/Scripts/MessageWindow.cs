@@ -1,19 +1,29 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MessageWindowController : MonoBehaviour
+public class MessageWindow : MonoBehaviour
 {
     private Image image;
     private Text message;
+    private bool waitingClick = false;
 
     void Start()
     {
-        this.image = GameObject.Find("MessageWindow").GetComponent<Image>();
+        this.image = GameObject
+            .FindGameObjectWithTag("MessageWindow")
+            .GetComponent<Image>();
         this.image.enabled = false;
-        this.message = GameObject.Find("MessageWindowText").GetComponent<Text>();
+        this.message = GameObject
+            .Find("MessageWindowMessage")
+            .GetComponent<Text>();
+    }
+
+    private void Update()
+    {
+        if (this.waitingClick && Input.GetMouseButtonDown(0)) {
+            this.waitingClick = false;
+        }
     }
 
     public void Open()
@@ -31,6 +41,16 @@ public class MessageWindowController : MonoBehaviour
     {
         // TODO 文字の長さに応じて折り曲げる
         this.message.text = message;
+    }
+
+    public IEnumerator ShowMessage(string message)
+    {
+        this.message.text = message;
+        this.waitingClick = true;
+        while(this.waitingClick)
+        {
+            yield return null;
+        }
     }
 
     public void SetRandomMessage() {

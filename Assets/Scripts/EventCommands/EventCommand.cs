@@ -11,5 +11,5 @@ public abstract class EventCommand
     {
         this.args = args;
     }
-    public abstract void Exec();
+    public abstract IEnumerator Exec();
 }

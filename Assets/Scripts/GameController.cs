@@ -7,13 +7,14 @@ public class GameController : MonoBehaviour
     public Sprite[] numberSprites;
     public Sprite[] diceSprites;
     private UIController uiController;
-    private MessageWindowController messageWindowController;
     private PlayerCamera playerCamera;
     private List<Player> players = new List<Player>();
     private int currentPlayerIndex = -1;
     private List<int> currentTileIndexes = new List<int>();
     private Dice dice;
     private Board board;
+    private bool diceRoleAllowed = true;
+    private Event executingEvent = null;
 
     // Start is called before the first frame update
     void Start()
@@ -21,9 +22,6 @@ public class GameController : MonoBehaviour
         this.uiController = GameObject
             .FindGameObjectWithTag("UIController")
             .GetComponent<UIController>();
-        this.messageWindowController = GameObject
-            .FindGameObjectWithTag("MessageWindowController")
-            .GetComponent<MessageWindowController>();
         this.playerCamera = GameObject
             .FindGameObjectWithTag("MainCamera")
             .GetComponent<PlayerCamera>();
@@ -54,15 +52,15 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (diceRoleAllowed && Input.GetMouseButton(0))
         {
             dice.Roll();
+            diceRoleAllowed = false;
         }
     }
 
     public void OnDiceRoled(int num)
     {
-        this.messageWindowController.Close();
         this.currentTileIndexes[this.currentPlayerIndex] += num;
         var nextPosition = this.board.GetTilePositionByIndex(this.currentTileIndexes[this.currentPlayerIndex]);
         this.players[this.currentPlayerIndex].MoveTo(nextPosition);
@@ -71,11 +69,8 @@ public class GameController : MonoBehaviour
     public void OnPlayerReachedTargetTile(Player player)
     {
         Tile targetTile = board.GetTileByIndex(this.currentTileIndexes[this.currentPlayerIndex]);
-        Event evt = Event.GenerateRandomEvent(targetTile.eventType);
-        evt.Exec();
-        this.messageWindowController.Open();
-        this.messageWindowController.SetRandomMessage();
-        ActiveteNextPlayer();
+        this.executingEvent = Event.GenerateRandomEvent(targetTile.eventType);
+        StartCoroutine(this.executingEvent.Exec(ActiveteNextPlayer));
     }
 
     private void ActiveteNextPlayer()
@@ -83,6 +78,11 @@ public class GameController : MonoBehaviour
         this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.players.Count;
         this.playerCamera.SetTargetPlayer(this.players[this.currentPlayerIndex]);
         this.uiController.SetTurnText(this.players[this.currentPlayerIndex].nickname);
+        this.diceRoleAllowed = true;
+        if (this.executingEvent != null)
+        {
+            Destroy(this.executingEvent.gameObject);
+        }
     }
 
     public Sprite getNumberSprite(int number) {

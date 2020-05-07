@@ -7,7 +7,7 @@ TagManager:
   - Dice
   - Board
   - UIController
-  - MessageWindowController
+  - MessageWindow
   layers:
   - Default
   - TransparentFX
