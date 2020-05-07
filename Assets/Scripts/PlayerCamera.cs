@@ -22,6 +22,7 @@ public class PlayerCamera : MonoBehaviour
                 this.transform.position.z
             );
         }
+
     }
 
     public void SetTargetPlayer(Player player)

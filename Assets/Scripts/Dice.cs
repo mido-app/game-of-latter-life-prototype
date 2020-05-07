@@ -12,11 +12,6 @@ public class Dice : MonoBehaviour
     private bool rolling;
     private float currentDuration = 0.0f;
 
-    // audio
-    public AudioClip dicerollSound;
-    private AudioSource audioSource;
-
-
     // Start is called before the first frame update
     void Start()
     {
@@ -24,7 +19,6 @@ public class Dice : MonoBehaviour
             .FindGameObjectWithTag("GameController")
             .GetComponent<GameController>();
         this.spriteRenderer = GetComponent<SpriteRenderer>();
-        this.audioSource = gameObject.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -36,7 +30,7 @@ public class Dice : MonoBehaviour
             var num = Random.Range(1, 7);
             SetDiceSprite(num);
 
-            this.audioSource.PlayOneShot(this.dicerollSound);
+            AudioController.Instance.PlaySE("diceroll");
 
             if (currentDuration >= DiceRoleDuration)
             {

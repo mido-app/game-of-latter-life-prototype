@@ -10,13 +10,13 @@ public class Board : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        for(int y=0; y<100; y++)
+        for (int y = 0; y < 100; y++)
         {
             var tile = createTile();
             tile.number = Random.Range(0, 1000);
             tile.transform.position = new Vector3(0, y, 0);
             this.tiles.Add(tile);
-        } 
+        }
     }
 
     public Vector2 GetTilePositionByIndex(int index)
@@ -24,7 +24,8 @@ public class Board : MonoBehaviour
         return this.tiles[index].transform.position;
     }
 
-    private Tile createTile() {
+    private Tile createTile()
+    {
         var tileObj = GameObject.Instantiate(tilePrehub);
         tileObj.transform.parent = this.transform;
         return tileObj.GetComponent<Tile>();
