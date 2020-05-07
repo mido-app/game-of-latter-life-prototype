@@ -7,6 +7,7 @@ public class GameController : MonoBehaviour
     public Sprite[] numberSprites;
     public Sprite[] diceSprites;
     private UIController uiController;
+    private MessageWindowController messageWindowController;
     private PlayerCamera playerCamera;
     private List<Player> players = new List<Player>();
     private int currentPlayerIndex = -1;
@@ -20,6 +21,9 @@ public class GameController : MonoBehaviour
         this.uiController = GameObject
             .FindGameObjectWithTag("UIController")
             .GetComponent<UIController>();
+        this.messageWindowController = GameObject
+            .FindGameObjectWithTag("MessageWindowController")
+            .GetComponent<MessageWindowController>();
         this.playerCamera = GameObject
             .FindGameObjectWithTag("MainCamera")
             .GetComponent<PlayerCamera>();
@@ -58,6 +62,7 @@ public class GameController : MonoBehaviour
 
     public void OnDiceRoled(int num)
     {
+        this.messageWindowController.Close();
         this.currentTileIndexes[this.currentPlayerIndex] += num;
         var nextPosition = this.board.GetTilePositionByIndex(this.currentTileIndexes[this.currentPlayerIndex]);
         this.players[this.currentPlayerIndex].MoveTo(nextPosition);
@@ -68,6 +73,8 @@ public class GameController : MonoBehaviour
         Tile targetTile = board.GetTileByIndex(this.currentTileIndexes[this.currentPlayerIndex]);
         Event evt = Event.GenerateRandomEvent(targetTile.eventType);
         evt.Exec();
+        this.messageWindowController.Open();
+        this.messageWindowController.SetRandomMessage();
         ActiveteNextPlayer();
     }
 
