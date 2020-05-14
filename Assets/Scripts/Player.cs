@@ -11,6 +11,11 @@ public class Player : MonoBehaviour
     private bool moving = false;
     private Vector3 targetPorision;
 
+    // ステータス
+    private int qol;
+    private int money;
+    private int time;
+
     private void Start()
     {
         this.targetPorision = this.transform.position;
@@ -54,6 +59,27 @@ public class Player : MonoBehaviour
     {
         return this.transform.position.x == targetPorision.x
             && this.transform.position.y == targetPorision.y;
+    }
+
+    public void AddQoL(int value)
+    {
+        int newValue = qol + value;
+        if (newValue < 0) this.qol = 0;
+        else this.qol = newValue;
+    }
+
+    public void AddMoney(int value)
+    {
+        int newValue = money + value;
+        if (newValue < 0) this.qol = 0;
+        else this.money = newValue;
+    }
+
+    public void AddTime(int value)
+    {
+        int newValue = time + value;
+        if (newValue < 0) this.qol = 0;
+        else this.time = newValue;
     }
 }
 

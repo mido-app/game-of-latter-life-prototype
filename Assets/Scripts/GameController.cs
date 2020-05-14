@@ -93,4 +93,14 @@ public class GameController : MonoBehaviour
     {
         return this.diceSprites[number - 1];
     }
+
+    public Player GetCurrentPlayer()
+    {
+        return this.players[this.currentPlayerIndex];
+    }
+
+    public List<Player> GetPlayers()
+    {
+        return this.players;
+    }
 }
