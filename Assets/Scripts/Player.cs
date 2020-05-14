@@ -8,13 +8,14 @@ public class Player : MonoBehaviour
     public string nickname;
     public float moveSpeed = 3.0f;
     public PlayerReachedTargetTileEvent OnReached = new PlayerReachedTargetTileEvent();
+    public PlayerStatusUpdatedEvent OnStatusUpdated = new PlayerStatusUpdatedEvent();
     private bool moving = false;
     private Vector3 targetPorision;
 
     // ステータス
-    private int qol;
-    private int money;
-    private int time;
+    public int QoL { get; private set; }
+    public int Money { get; private set; }
+    public int Time { get; private set; }
 
     private void Start()
     {
@@ -35,7 +36,7 @@ public class Player : MonoBehaviour
             var nextPosition = Vector2.MoveTowards(
                 this.transform.position,
                 this.targetPorision,
-                this.moveSpeed * Time.deltaTime
+                this.moveSpeed * UnityEngine.Time.deltaTime
             );
             this.transform.position = new Vector3(
                 nextPosition.x,
@@ -63,24 +64,28 @@ public class Player : MonoBehaviour
 
     public void AddQoL(int value)
     {
-        int newValue = qol + value;
-        if (newValue < 0) this.qol = 0;
-        else this.qol = newValue;
+        int newValue = QoL + value;
+        if (newValue < 0) this.QoL = 0;
+        else this.QoL = newValue;
+        OnStatusUpdated?.Invoke(this);
     }
 
     public void AddMoney(int value)
     {
-        int newValue = money + value;
-        if (newValue < 0) this.qol = 0;
-        else this.money = newValue;
+        int newValue = Money + value;
+        if (newValue < 0) this.QoL = 0;
+        else this.Money = newValue;
+        OnStatusUpdated?.Invoke(this);
     }
 
     public void AddTime(int value)
     {
-        int newValue = time + value;
-        if (newValue < 0) this.qol = 0;
-        else this.time = newValue;
+        int newValue = Time + value;
+        if (newValue < 0) this.QoL = 0;
+        else this.Time = newValue;
+        OnStatusUpdated?.Invoke(this);
     }
 }
 
 public class PlayerReachedTargetTileEvent : UnityEvent<Player> {}
+public class PlayerStatusUpdatedEvent : UnityEvent<Player> { }

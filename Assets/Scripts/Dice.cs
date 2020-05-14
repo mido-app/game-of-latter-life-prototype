@@ -40,7 +40,7 @@ public class Dice : MonoBehaviour
 
     private void SetDiceSprite(int num)
     {
-        this.spriteRenderer.sprite = this.gameController.getDiceSprite(num);
+        this.spriteRenderer.sprite = this.gameController.GetDiceSprite(num);
     }
 
     public void Roll()

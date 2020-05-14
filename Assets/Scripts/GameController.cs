@@ -7,6 +7,7 @@ public class GameController : MonoBehaviour
     public Sprite[] numberSprites;
     public Sprite[] diceSprites;
     private UIController uiController;
+    private PlayerStatusWindow playerStatusWindow;
     private PlayerCamera playerCamera;
     private List<Player> players = new List<Player>();
     private int currentPlayerIndex = -1;
@@ -22,6 +23,9 @@ public class GameController : MonoBehaviour
         this.uiController = GameObject
             .FindGameObjectWithTag("UIController")
             .GetComponent<UIController>();
+        this.playerStatusWindow = GameObject
+            .FindGameObjectWithTag("PlayerStatusWindow")
+            .GetComponent<PlayerStatusWindow>();
         this.playerCamera = GameObject
             .FindGameObjectWithTag("MainCamera")
             .GetComponent<PlayerCamera>();
@@ -42,6 +46,7 @@ public class GameController : MonoBehaviour
             player.id = id;
             player.nickname = $"Player{id}";
             player.OnReached.AddListener(this.OnPlayerReachedTargetTile);
+            player.OnStatusUpdated.AddListener(this.OnPlayerStatusUpdate);
             this.players.Add(player);
             this.currentTileIndexes.Add(0);
         }
@@ -73,11 +78,20 @@ public class GameController : MonoBehaviour
         StartCoroutine(this.executingEvent.Exec(ActiveteNextPlayer));
     }
 
+    public void OnPlayerStatusUpdate(Player player)
+    {
+        if (player.id == this.currentPlayerIndex)
+        {
+            this.playerStatusWindow.SetPlayer(player);
+        }
+    }
+
     private void ActiveteNextPlayer()
     {
         this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.players.Count;
         this.playerCamera.SetTargetPlayer(this.players[this.currentPlayerIndex]);
         this.uiController.SetTurnText(this.players[this.currentPlayerIndex].nickname);
+        this.playerStatusWindow.SetPlayer(this.players[this.currentPlayerIndex]);
         this.diceRoleAllowed = true;
         if (this.executingEvent != null)
         {
@@ -85,11 +99,11 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public Sprite getNumberSprite(int number) {
+    public Sprite GetNumberSprite(int number) {
         return this.numberSprites[number];
     }
 
-    public Sprite getDiceSprite(int number)
+    public Sprite GetDiceSprite(int number)
     {
         return this.diceSprites[number - 1];
     }

@@ -24,7 +24,7 @@ public class Number : MonoBehaviour
     {
         if (number != prevNumber)
         {
-            this.spriteRenderer.sprite = this.gameController.getNumberSprite(number);
+            this.spriteRenderer.sprite = this.gameController.GetNumberSprite(number);
         }
     }
 }

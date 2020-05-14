@@ -3,6 +3,6 @@ Message こんにちは
 BGM sample.mp4
 Message このマスは喜びマスです
 Message あなたは道端でお金を拾いました
-Message お金が100増えた
 PlayerStatusChange CurrentPlayer Money 100
+Message お金が100増えた
 CloseMessageWindow

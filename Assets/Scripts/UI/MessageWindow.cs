@@ -53,16 +53,4 @@ public class MessageWindow : MonoBehaviour
         }
     }
 
-    public void SetRandomMessage() {
-        string[] randomMessages = {
-            "おおしまは QOL が 5 億あがった",
-            "おおしまは人生に絶望した"
-        };
-        System.Random r = new System.Random();
-        int index = r.Next(0, randomMessages.Length);
-
-        string message = randomMessages[index];
-        this.SetMessage(message);
-    }
-
 }
