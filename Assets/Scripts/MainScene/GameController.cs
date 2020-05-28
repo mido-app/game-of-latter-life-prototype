@@ -1,11 +1,17 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
     public GameObject playerPrehub;
     public Sprite[] numberSprites;
     public Sprite[] diceSprites;
+    public int playerNum = 1;
+    public int initialPlayerAge = 50;
+    public int initialParentAge = 75;
+    public int agePerDiceRoll = 2;
+    public int parentDeadAge = 95;
     private UIController uiController;
     private PlayerStatusWindow playerStatusWindow;
     private PlayerCamera playerCamera;
@@ -16,6 +22,7 @@ public class GameController : MonoBehaviour
     private Board board;
     private bool diceRoleAllowed = true;
     private Event executingEvent = null;
+    private bool isGameEndFired = false;
 
     // Start is called before the first frame update
     void Start()
@@ -37,7 +44,7 @@ public class GameController : MonoBehaviour
             .FindGameObjectWithTag("Board")
             .GetComponent<Board>();
 
-        for(int id=0; id<3; id++)
+        for(int id=0; id<playerNum; id++)
         {
             var playerObj = Instantiate(playerPrehub);
             playerObj.transform.parent = this.transform;
@@ -47,6 +54,8 @@ public class GameController : MonoBehaviour
             player.nickname = $"Player{id}";
             player.OnReached.AddListener(this.OnPlayerReachedTargetTile);
             player.OnStatusUpdated.AddListener(this.OnPlayerStatusUpdate);
+            player.Age = initialPlayerAge - agePerDiceRoll;
+            player.ParentAge = initialParentAge - agePerDiceRoll;
             this.players.Add(player);
             this.currentTileIndexes.Add(0);
         }
@@ -57,11 +66,43 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (IsGameEnded())
+        {
+            if (!isGameEndFired)
+            {
+                isGameEndFired = true;
+                OnGameEnd();
+            }
+            return;
+        }
+
         if (diceRoleAllowed && Input.GetMouseButton(0))
         {
             dice.Roll();
             diceRoleAllowed = false;
         }
+    }
+
+    public bool IsGameEnded() {
+        foreach(Player player in this.players)
+        {
+            if (player.ParentAge < parentDeadAge)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void OnGameEnd()
+    {
+        var evt = Event.GenerateSpecificEvent("System/GameEnd.script");
+        StartCoroutine(evt.Exec(GoToResultScene));
+    }
+
+    private void GoToResultScene()
+    {
+        SceneManager.LoadScene("ResultScene");
     }
 
     public void OnDiceRoled(int num)
@@ -89,6 +130,8 @@ public class GameController : MonoBehaviour
     private void ActiveteNextPlayer()
     {
         this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.players.Count;
+        this.players[this.currentPlayerIndex].AddAge(agePerDiceRoll);
+        this.players[this.currentPlayerIndex].AddParentAge(agePerDiceRoll);
         this.playerCamera.SetTargetPlayer(this.players[this.currentPlayerIndex]);
         this.uiController.SetTurnText(this.players[this.currentPlayerIndex].nickname);
         this.playerStatusWindow.SetPlayer(this.players[this.currentPlayerIndex]);

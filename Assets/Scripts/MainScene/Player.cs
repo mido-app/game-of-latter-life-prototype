@@ -13,9 +13,11 @@ public class Player : MonoBehaviour
     private Vector3 targetPorision;
 
     // ステータス
-    public int QoL { get; private set; }
-    public int Money { get; private set; }
-    public int Time { get; private set; }
+    public int QoL { get; set; }
+    public int Money { get; set; }
+    public int Time { get; set; }
+    public int Age { get; set; }
+    public int ParentAge { get; set; }
 
     private void Start()
     {
@@ -83,6 +85,18 @@ public class Player : MonoBehaviour
         int newValue = Time + value;
         if (newValue < 0) this.QoL = 0;
         else this.Time = newValue;
+        OnStatusUpdated?.Invoke(this);
+    }
+
+    public void AddAge(int value)
+    {
+        this.Age += value;
+        OnStatusUpdated?.Invoke(this);
+    }
+
+    public void AddParentAge(int value)
+    {
+        this.ParentAge += value;
         OnStatusUpdated?.Invoke(this);
     }
 }

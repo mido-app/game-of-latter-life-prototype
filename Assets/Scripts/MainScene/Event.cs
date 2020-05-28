@@ -18,6 +18,14 @@ public class Event : MonoBehaviour
         return evt;
     }
 
+    public static Event GenerateSpecificEvent(string eventFilePath)
+    {
+        GameObject gameObject = new GameObject("Event");
+        Event evt = gameObject.AddComponent<Event>();
+        evt.Init(eventFilePath);
+        return evt;
+    }
+
     private List<EventCommand> commands = new List<EventCommand>();
 
     public void Init(
@@ -26,6 +34,10 @@ public class Event : MonoBehaviour
     )
     {
         ReadEvent(eventType, eventFileName);
+    }
+
+    public void Init(string eventFilePath) {
+        ReadEvent(eventFilePath);
     }
 
     public IEnumerator Exec(Action callback)
@@ -39,13 +51,18 @@ public class Event : MonoBehaviour
 
     private void ReadEvent(EventType eventType, string eventFileName)
     {
-        FileInfo info = new FileInfo($"{Application.dataPath}/Datas/Events/{eventType.GetDirectoryName()}/{eventFileName}");
+        this.ReadEvent($"{eventType.GetDirectoryName()}/{eventFileName}");
+    }
+
+    private void ReadEvent(string eventFilePath) {
+        FileInfo info = new FileInfo($"{Application.dataPath}/Datas/Events/{eventFilePath}");
         using (StreamReader reader = new StreamReader(info.OpenRead(), Encoding.UTF8))
         {
             while (!reader.EndOfStream)
             {
                 string line = reader.ReadLine();
-                if (!string.IsNullOrEmpty(line.Trim())) {
+                if (!string.IsNullOrEmpty(line.Trim()))
+                {
                     this.commands.Add(GetCommand(line));
                 }
             }

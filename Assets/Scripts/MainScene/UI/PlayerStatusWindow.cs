@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerStatusWindow : MonoBehaviour
@@ -9,7 +7,7 @@ public class PlayerStatusWindow : MonoBehaviour
     private Text message;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         this.image = this.GetComponent<Image>();
         this.message = GameObject
@@ -30,6 +28,6 @@ public class PlayerStatusWindow : MonoBehaviour
 
     public void SetPlayer(Player player)
     {
-        this.message.text = $"{player.name}\nQoL: {player.QoL}\nMoney: {player.Money}\nTime: {player.Time}";
+        this.message.text = $"{player.name}\nAge: {player.Age}\nParent Age: {player.ParentAge}\nQoL: {player.QoL}\nMoney: {player.Money}\nTime: {player.Time}";
     }
 }
