@@ -25,9 +25,13 @@ jobs:
         unity-serial: ${{ secrets.UNITY_SERIAL }}
         build-target: WebGL
     - name: ls
-      run: ls -la
+      run: ls -la > ls.txt
 #     - name: Setup tmate session
 #       uses: mxschmitt/action-tmate@v1  
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Android-App
+        path: ls.txt
     - uses: actions/upload-artifact@v2
       with:
         name: Android-App
