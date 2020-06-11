@@ -24,3 +24,8 @@ jobs:
         unity-password: ${{ secrets.UNITY_PASSWORD }}
         unity-serial: ${{ secrets.UNITY_SERIAL }}
         build-target: Android
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Android-App
+        path: Output/
+
