@@ -19,7 +19,7 @@ jobs:
     steps:
     - uses: yukiarrr/unity-build-action@v0.5.0
       with:
-        unity-version: 2018.4.12f1
+        unity-version: 2019.4.0f1
         unity-username: ${{ secrets.UNITY_USERNAME }}
         unity-password: ${{ secrets.UNITY_PASSWORD }}
         unity-serial: ${{ secrets.UNITY_SERIAL }}
