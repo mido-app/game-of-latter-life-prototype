@@ -23,14 +23,14 @@ jobs:
         unity-username: ${{ secrets.UNITY_USERNAME }}
         unity-password: ${{ secrets.UNITY_PASSWORD }}
         unity-serial: ${{ secrets.UNITY_SERIAL }}
-        build-target: WebGL
+        build-target: Mac
     - name: ls
       run: ls -la > ls.txt
 #     - name: Setup tmate session
 #       uses: mxschmitt/action-tmate@v1  
     - uses: actions/upload-artifact@v2
       with:
-        name: Android-App
+        name: ls
         path: ls.txt
     - uses: actions/upload-artifact@v2
       with:
