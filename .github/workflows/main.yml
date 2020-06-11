@@ -17,8 +17,6 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    - name: install ruby
-      run: apt-get -y ruby
     - name: install gem
       run: gem install u3d
     - name: list available unity versions
