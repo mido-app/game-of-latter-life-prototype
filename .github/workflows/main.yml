@@ -23,7 +23,7 @@ jobs:
         unity-username: ${{ secrets.UNITY_USERNAME }}
         unity-password: ${{ secrets.UNITY_PASSWORD }}
         unity-serial: ${{ secrets.UNITY_SERIAL }}
-        build-target: Mac
+        build-target: Android
     - name: ls
       run: ls -la > ls.txt
 #     - name: Setup tmate session
