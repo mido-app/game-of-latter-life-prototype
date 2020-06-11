@@ -17,6 +17,12 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+    - name: install ruby
+      run: apt-get -y ruby
+    - name: install gem
+      run: gem install u3d
+    - name: list available unity versions
+      run: u3d available
     - uses: yukiarrr/unity-build-action@v0.5.0
       with:
         unity-version: 2019.4.0f1
