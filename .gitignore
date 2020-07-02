@@ -78,3 +78,4 @@ mono_crash.*.json
 
 # Firebase
 /.firebase/
+/node_modules/
