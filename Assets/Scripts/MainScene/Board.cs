@@ -11,14 +11,14 @@ public class Board : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        for(int y=0; y<100; y++)
+        for (int y = 0; y < 100; y++)
         {
             var tile = CreateTile();
             tile.number = UnityEngine.Random.Range(0, 1000);
             tile.eventType = GetRandomEventType();
             tile.transform.position = new Vector3(0, y, 0);
             this.tiles.Add(tile);
-        } 
+        }
     }
 
     public Tile GetTileByIndex(int index) {

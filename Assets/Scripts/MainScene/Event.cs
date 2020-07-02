@@ -9,6 +9,7 @@ public class Event : MonoBehaviour
 {
     public static Event GenerateRandomEvent(EventType eventType)
     {
+        Debug.Log($"{Application.dataPath}/Datas/Events/{eventType.GetDirectoryName()}");
         DirectoryInfo dir = new DirectoryInfo($"{Application.dataPath}/Datas/Events/{eventType.GetDirectoryName()}");
         FileInfo[] files = dir.GetFiles("*.script");
         int index = UnityEngine.Random.Range(0, files.Length);
