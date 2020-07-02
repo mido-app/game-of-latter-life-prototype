@@ -13,6 +13,7 @@ readonly EVENTS_SOURCE_DIR="${PROJECT_HOME}/Assets/Datas/Events/"
 readonly FUNCTIONS_DIR="${PROJECT_HOME}/functions/"
 readonly FUNCTIONS_EVENTS_DIR="${PROJECT_HOME}/functions/Events/"
 
+rm -rf "${FUNCTIONS_EVENTS_DIR}"
 cp -r "${EVENTS_SOURCE_DIR}" "${FUNCTIONS_EVENTS_DIR}"
 
 cd "${FUNCTIONS_DIR}"
@@ -20,4 +21,5 @@ yarn install
 
 cd "${PROJECT_HOME}"
 yarn install
-yarn run firebase deploy --only functions
+# --force: delete Cloud Functions missing from the current working directory without confirmation
+yarn run firebase deploy --force --only functions
