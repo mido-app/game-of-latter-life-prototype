@@ -1,0 +1,9 @@
+{
+  "name": "unity-sugoroku-game-sample",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {
+    "firebase-tools": "^8.4.3"
+  }
+}
