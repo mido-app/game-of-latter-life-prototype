@@ -4,29 +4,10 @@ using System;
 using System.IO;
 using System.Text;
 using UnityEngine;
+using System.Linq;
 
 public class Event : MonoBehaviour
 {
-    public static Event GenerateRandomEvent(EventType eventType)
-    {
-        Debug.Log($"{Application.dataPath}/Datas/Events/{eventType.GetDirectoryName()}");
-        DirectoryInfo dir = new DirectoryInfo($"{Application.dataPath}/Datas/Events/{eventType.GetDirectoryName()}");
-        FileInfo[] files = dir.GetFiles("*.script");
-        int index = UnityEngine.Random.Range(0, files.Length);
-        GameObject gameObject = new GameObject("Event");
-        Event evt = gameObject.AddComponent<Event>();
-        evt.Init(eventType, files[index].Name);
-        return evt;
-    }
-
-    public static Event GenerateSpecificEvent(string eventFilePath)
-    {
-        GameObject gameObject = new GameObject("Event");
-        Event evt = gameObject.AddComponent<Event>();
-        evt.Init(eventFilePath);
-        return evt;
-    }
-
     private List<EventCommand> commands = new List<EventCommand>();
 
     public void Init(
@@ -39,6 +20,19 @@ public class Event : MonoBehaviour
 
     public void Init(string eventFilePath) {
         ReadEvent(eventFilePath);
+    }
+
+    public void InitFromScriptText(string scriptText)
+    {
+        var text = scriptText.Replace("\r\n", "\n").Replace("\r", "\n");
+        var lines = scriptText.Split('\n');
+        lines.ToList().ForEach(line =>
+        {
+            if (!string.IsNullOrEmpty(line.Trim()))
+            {
+                this.commands.Add(GetCommand(line));
+            }
+        });
     }
 
     public IEnumerator Exec(Action callback)
@@ -86,7 +80,9 @@ public enum EventType
     /** 喜びマス */
     JOY,
     /** 悲しみマス */
-    SADNESS
+    SADNESS,
+    /** システムイベント */
+    SYSTEM,
 }
 
 public static class EventTypeExtension {
@@ -94,7 +90,8 @@ public static class EventTypeExtension {
     private static readonly Dictionary<EventType, string> directoryNameMap = new Dictionary<EventType, string>
     {
         { EventType.JOY, "Joy" },
-        { EventType.SADNESS, "Sadness" }
+        { EventType.SADNESS, "Sadness" },
+        { EventType.SYSTEM, "System" },
     };
 
     public static string GetDirectoryName(this EventType eventType)

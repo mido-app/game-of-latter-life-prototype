@@ -40,6 +40,8 @@ public class Board : MonoBehaviour
         List<EventType> eventTypes= Enum
             .GetValues(typeof(EventType))
             .Cast<EventType>()
+            .AsEnumerable()
+            .Where(t => t != EventType.SYSTEM)
             .ToList();
         int index = UnityEngine.Random.Range(0, eventTypes.Count);
         return eventTypes[index];

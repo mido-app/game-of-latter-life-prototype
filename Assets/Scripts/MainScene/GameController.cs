@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.IO;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
 
 public class GameController : MonoBehaviour
 {
@@ -96,8 +100,12 @@ public class GameController : MonoBehaviour
 
     private void OnGameEnd()
     {
-        var evt = Event.GenerateSpecificEvent("System/GameEnd.script");
-        StartCoroutine(evt.Exec(GoToResultScene));
+        StartCoroutine(
+            GenerateSpecificEvent(EventType.SYSTEM, "GameEnd.script", evt =>
+            {
+                StartCoroutine(evt.Exec(GoToResultScene));
+            })
+        );
     }
 
     private void GoToResultScene()
@@ -115,8 +123,74 @@ public class GameController : MonoBehaviour
     public void OnPlayerReachedTargetTile(Player player)
     {
         Tile targetTile = board.GetTileByIndex(this.currentTileIndexes[this.currentPlayerIndex]);
-        this.executingEvent = Event.GenerateRandomEvent(targetTile.eventType);
-        StartCoroutine(this.executingEvent.Exec(ActiveteNextPlayer));
+        StartCoroutine(
+            GenerateRandomEvent(targetTile.eventType, evt => {
+                this.executingEvent = evt;
+                StartCoroutine(this.executingEvent.Exec(ActiveteNextPlayer));
+            })
+        );
+    }
+
+#if UNITY_WEBGL
+    private static readonly string GET_RANDOM_EVENT_SCRIPT = "http://google.com";
+#endif
+
+    public IEnumerator GenerateRandomEvent(EventType eventType, Action<Event> eventHandler)
+    {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        Debug.Log("GenerateRandomEvent");
+        using (var req = UnityWebRequest.Get("http://google.com"))
+        {
+            Debug.Log("Request start");
+            yield return req.SendWebRequest();
+            Debug.Log("Request end");
+            if (req.isNetworkError || req.isHttpError)
+            {
+                throw new Exception("HTTPリクエストエラー");
+            }
+            GameObject gameObject = new GameObject("Event");
+            Event evt = gameObject.AddComponent<Event>();
+            evt.InitFromScriptText(req.downloadHandler.text);
+            eventHandler(evt);            
+        }
+#else
+        Debug.Log($"{Application.dataPath}/Datas/Events/{eventType.GetDirectoryName()}");
+        DirectoryInfo dir = new DirectoryInfo($"{Application.dataPath}/Datas/Events/{eventType.GetDirectoryName()}");
+        FileInfo[] files = dir.GetFiles("*.script");
+        int index = UnityEngine.Random.Range(0, files.Length);
+        GameObject gameObject = new GameObject("Event");
+        Event evt = gameObject.AddComponent<Event>();
+        evt.Init(eventType, files[index].Name);
+        eventHandler(evt);
+        yield return null;
+#endif
+    }
+
+    public IEnumerator GenerateSpecificEvent(EventType eventType, string eventFileName, Action<Event> eventHandler)
+    {
+#if !UNITY_EDITOR && UNITY_WEBGL
+        Debug.Log("GenerateRandomEvent");
+        using (var req = UnityWebRequest.Get("http://google.com"))
+        {
+            Debug.Log("Request start");
+            yield return req.SendWebRequest();
+            Debug.Log("Request end");
+            if (req.isNetworkError || req.isHttpError)
+            {
+                throw new Exception("HTTPリクエストエラー");
+            }
+            GameObject gameObject = new GameObject("Event");
+            Event evt = gameObject.AddComponent<Event>();
+            evt.InitFromScriptText(req.downloadHandler.text);
+            eventHandler(evt); 
+        }
+#else
+        GameObject gameObject = new GameObject("Event");
+        Event evt = gameObject.AddComponent<Event>();
+        evt.Init(eventType, eventFileName);
+        eventHandler(evt);
+        yield return null;
+#endif
     }
 
     public void OnPlayerStatusUpdate(Player player)
