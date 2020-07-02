@@ -23,5 +23,6 @@ public class BuildSetting
                 BuildTarget.WebGL,
                 BuildOptions.None
         );
+        Debug.Log("Build Complete!");
     }
 }
