@@ -131,14 +131,14 @@ public class GameController : MonoBehaviour
         );
     }
 
-#if UNITY_EDITOR && UNITY_WEBGL
+#if !UNITY_EDITOR && UNITY_WEBGL
     private static readonly string GET_RANDOM_EVENT_URL = "https://asia-northeast1-latelifegame.cloudfunctions.net/getRandomEvent";
     private static readonly string GET_EVENT_URL = "https://asia-northeast1-latelifegame.cloudfunctions.net/getEvent";
 #endif
 
     public IEnumerator GenerateRandomEvent(EventType eventType, Action<Event> eventHandler)
     {
-#if UNITY_EDITOR && UNITY_WEBGL
+#if !UNITY_EDITOR && UNITY_WEBGL
         using (var req = UnityWebRequest.Get(GET_RANDOM_EVENT_URL + $"?eventType={eventType.GetDirectoryName()}"))
         {
             yield return req.SendWebRequest();
@@ -166,7 +166,7 @@ public class GameController : MonoBehaviour
 
     public IEnumerator GenerateSpecificEvent(EventType eventType, string eventFileName, Action<Event> eventHandler)
     {
-#if UNITY_EDITOR && UNITY_WEBGL
+#if !UNITY_EDITOR && UNITY_WEBGL
         Debug.Log("GenerateEvent");
         var eventName = eventFileName.Split('.')[0];
         using (var req = UnityWebRequest.Get(GET_EVENT_URL + $"?eventType={eventType.GetDirectoryName()}&eventName={eventName}"))
