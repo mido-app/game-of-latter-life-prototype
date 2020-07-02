@@ -28,6 +28,11 @@ export const getRandomEvent = functions
     console.log(`randomFile = ${randomFile}`)
     const content = fs.readFileSync(eventTypeDir + randomFile)
 
+    response.set('Access-Control-Allow-Origin', '*')
+    response.set('Access-Control-Allow-Methods', 'GET')
+    response.set('Access-Control-Allow-Headers', 'Content-Type')
+    // https://stackoverflow.com/questions/5822985/cross-domain-resource-sharing-get-refused-to-get-unsafe-header-etag-from-re
+    response.set('Access-Control-Expose-Headers', 'ETag')
     response.contentType('text/plain')
     response.send(content);
   });
@@ -49,6 +54,11 @@ export const getEvent = functions
 
     const content = fs.readFileSync(`./Events/${eventType}/${eventName}.script`)
 
+    response.set('Access-Control-Allow-Origin', '*')
+    response.set('Access-Control-Allow-Methods', 'GET')
+    response.set('Access-Control-Allow-Headers', 'Content-Type')
+    // https://stackoverflow.com/questions/5822985/cross-domain-resource-sharing-get-refused-to-get-unsafe-header-etag-from-re
+    response.set('Access-Control-Expose-Headers', 'ETag')
     response.contentType('text/plain')
     response.send(content);
   });
