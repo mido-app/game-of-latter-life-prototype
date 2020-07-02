@@ -30,4 +30,25 @@ export const getRandomEvent = functions
 
     response.contentType('text/plain')
     response.send(content);
-});
+  });
+
+export const getEvent = functions
+  .region(REGION)
+  .https.onRequest(async (request, response) => {
+    const eventType = request.query['eventType'] as string
+    const eventName = request.query['eventName'] as string
+    console.log(`eventType = ${eventType}, eventName = ${eventName}`)
+
+    // イベント名が '..' を含まないようにしているのは、ディレクトリトラバーサル対策
+    if (!eventType || !EVENT_TYPES.includes(eventType) || !eventName || eventName.includes('..')) {
+      console.log('eventType or eventName is invalid.')
+      response.status(400)
+      response.send('Bad Request')
+      return
+    }
+
+    const content = fs.readFileSync(`./Events/${eventType}/${eventName}.script`)
+
+    response.contentType('text/plain')
+    response.send(content);
+  });
