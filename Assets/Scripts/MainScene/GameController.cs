@@ -131,19 +131,17 @@ public class GameController : MonoBehaviour
         );
     }
 
-#if UNITY_WEBGL
-    private static readonly string GET_RANDOM_EVENT_SCRIPT = "http://google.com";
+#if UNITY_EDITOR && UNITY_WEBGL
+    private static readonly string GET_RANDOM_EVENT_URL = "https://asia-northeast1-latelifegame.cloudfunctions.net/getRandomEvent";
+    private static readonly string GET_EVENT_URL = "https://asia-northeast1-latelifegame.cloudfunctions.net/getEvent";
 #endif
 
     public IEnumerator GenerateRandomEvent(EventType eventType, Action<Event> eventHandler)
     {
-#if !UNITY_EDITOR && UNITY_WEBGL
-        Debug.Log("GenerateRandomEvent");
-        using (var req = UnityWebRequest.Get("http://google.com"))
+#if UNITY_EDITOR && UNITY_WEBGL
+        using (var req = UnityWebRequest.Get(GET_RANDOM_EVENT_URL + $"?eventType={eventType.GetDirectoryName()}"))
         {
-            Debug.Log("Request start");
             yield return req.SendWebRequest();
-            Debug.Log("Request end");
             if (req.isNetworkError || req.isHttpError)
             {
                 throw new Exception("HTTPリクエストエラー");
@@ -168,9 +166,10 @@ public class GameController : MonoBehaviour
 
     public IEnumerator GenerateSpecificEvent(EventType eventType, string eventFileName, Action<Event> eventHandler)
     {
-#if !UNITY_EDITOR && UNITY_WEBGL
-        Debug.Log("GenerateRandomEvent");
-        using (var req = UnityWebRequest.Get("http://google.com"))
+#if UNITY_EDITOR && UNITY_WEBGL
+        Debug.Log("GenerateEvent");
+        var eventName = eventFileName.Split('.')[0];
+        using (var req = UnityWebRequest.Get(GET_EVENT_URL + $"?eventType={eventType.GetDirectoryName()}&eventName={eventName}"))
         {
             Debug.Log("Request start");
             yield return req.SendWebRequest();
