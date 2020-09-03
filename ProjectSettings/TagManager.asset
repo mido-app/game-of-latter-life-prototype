@@ -9,6 +9,7 @@ TagManager:
   - UIController
   - MessageWindow
   - PlayerStatusWindow
+  - AudioContoroller
   layers:
   - Default
   - TransparentFX
