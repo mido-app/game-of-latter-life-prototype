@@ -58,6 +58,7 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+public/
 
 # Crashlytics generated file
 crashlytics-build.properties
@@ -69,3 +70,13 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
+# Mac
+.DS_Store
+
+# Crash
+mono_crash.*.json
+
+# Firebase
+/.firebase/
+/node_modules/
+/functions/Events/
