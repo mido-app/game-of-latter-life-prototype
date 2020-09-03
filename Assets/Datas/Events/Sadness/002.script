@@ -1,0 +1,8 @@
+OpenMessageWindow
+Message こんにちは
+BGM sample.mp4
+Message このマスはすっごい悲しみマスです
+Message あなたはクレジットカードを盗まれました
+PlayerStatusChange CurrentPlayer Money -300
+Message お金が300減った
+CloseMessageWindow

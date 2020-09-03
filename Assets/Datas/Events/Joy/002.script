@@ -1,0 +1,8 @@
+OpenMessageWindow
+Message こんにちは
+BGM sample.mp4
+Message このマスはすっごい喜びマスです
+Message あなたは道端で金塊を拾いました
+PlayerStatusChange CurrentPlayer Money 1000
+Message お金が1000増えた
+CloseMessageWindow

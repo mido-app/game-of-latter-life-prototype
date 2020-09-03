@@ -1,0 +1,46 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Unity Build Android
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: macos-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    - uses: yukiarrr/unity-build-action@v0.5.0
+      with:
+        unity-version: 2019.3.7f1
+        unity-username: ${{ secrets.UNITY_USERNAME }}
+        unity-password: ${{ secrets.UNITY_PASSWORD }}
+        unity-serial: ${{ secrets.UNITY_SERIAL }}
+        build-target: Android
+    - uses: yukiarrr/unity-build-action@v0.5.0
+      with:
+        unity-version: 2019.3.7f1
+        unity-username: ${{ secrets.UNITY_USERNAME }}
+        unity-password: ${{ secrets.UNITY_PASSWORD }}
+        unity-serial: ${{ secrets.UNITY_SERIAL }}
+        build-target: WebGL
+    - name: ls
+      run: ls -la > ls.txt
+#     - name: Setup tmate session
+#       uses: mxschmitt/action-tmate@v1  
+    - uses: actions/upload-artifact@v2
+      with:
+        name: ls
+        path: ls.txt
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Android-App
+        path: Output/
+
