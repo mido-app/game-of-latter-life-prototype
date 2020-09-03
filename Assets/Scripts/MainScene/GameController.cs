@@ -64,6 +64,8 @@ public class GameController : MonoBehaviour
             this.currentTileIndexes.Add(0);
         }
 
+        AudioController.Instance.ChangeVolume(0.5f, 0.5f);
+        AudioController.Instance.PlayBGM("日曜の午後");
         ActiveteNextPlayer();
     }
 
@@ -82,6 +84,7 @@ public class GameController : MonoBehaviour
 
         if (diceRoleAllowed && Input.GetMouseButton(0))
         {
+            AudioController.Instance.PlaySE("diceroll");
             dice.Roll();
             diceRoleAllowed = false;
         }
@@ -110,6 +113,7 @@ public class GameController : MonoBehaviour
 
     private void GoToResultScene()
     {
+        AudioController.Instance.StopBGM();
         SceneManager.LoadScene("ResultScene");
     }
 
