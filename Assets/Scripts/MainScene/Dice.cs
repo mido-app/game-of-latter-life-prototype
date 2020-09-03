@@ -30,8 +30,6 @@ public class Dice : MonoBehaviour
             var num = Random.Range(1, 7);
             SetDiceSprite(num);
 
-            AudioController.Instance.PlaySE("diceroll");
-
             if (currentDuration >= DiceRoleDuration)
             {
                 this.rolling = false;

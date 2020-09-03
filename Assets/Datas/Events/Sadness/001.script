@@ -1,8 +1,8 @@
 OpenMessageWindow
 Message こんにちは
-BGM sample.mp4
 Message このマスは悲しみマスです
 Message あなたは財布を盗まれました
+SE bad
 PlayerStatusChange CurrentPlayer Money -100
 Message お金が100減った
 CloseMessageWindow
